@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 import streamlit as st
 from deepface import DeepFace
 from openai.error import AuthenticationError
+from sympy import true
 
 st.set_page_config(initial_sidebar_state='collapsed')
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -172,7 +173,7 @@ if uploaded_file is not None:
         prompt = f"""
                 Hey, I am feeling {dominant_emotion}. based on that could you give me a proper feedback\n
                 on how I could be better (if i am feeling unwell) or acknowledge the fact that I am in a\n
-                good mood? Act as a therapist and try to find a efficient feedbacl based on my emotion!\n
+                good mood? Act as a therapist and try to find a efficient feedback based on my emotion!\n
                 Try and avoid any inappopriate responses. Please provide a brief response in 50 words or less.
                         """
         try:
@@ -182,6 +183,18 @@ if uploaded_file is not None:
                 generated_text = askGPT(prompt)
             st.success('Your draft is ready!')
             st.write(generated_text)
+            for i in range(7):
+                st.write("Do you have further questions or comments?")
+                q = st.text_input(label="Queary #: " + str(i) + "  ------",
+                placeholder="Your response here...")
+                while(q == ""):
+                    with st.spinner("Generating..."):
+                        generated_text = askGPT(prompt)
+                st.write(generated_text)
+
+
+
+
         except AuthenticationError as e:
             st.error("Please provide a valid OpenAI Api key!")
 
